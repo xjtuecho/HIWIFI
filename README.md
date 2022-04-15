@@ -1,91 +1,62 @@
-# HIWIFI
+# HIWIFI极路由固件仓库
 
-Official firmware of Hiwifi Routers.
+由于众所周知的原因，极路由原厂固件已经停止更新，自带插件也无法使用，本仓库对极路由常用的固件进行汇总。
 
-## 极路由壹S(HC5661)
+## 极路由可用固件
 
-[HC5661-sysupgrade-20180510-5dd5e8fd.bin](BIN/HC5661-sysupgrade-20180510-5dd5e8fd.bin)
+- [原厂固件](Factory)：功能少，运行稳定，扩展性差，无线驱动性能好，已经停止更新。
+- [Padavan固件](Padavan)：功能多，性能强大，运行稳定，界面流畅，扩展性一般，无线驱动性能好。
+- OpenWrt固件:功能多，扩展性好，无线性能弱，使用较复杂，更新频繁。
 
-- 稳定版rom(发布时间:2018-05-10)
-- 版本号：1.4.11.21001s(大小:12MB)
-- MD5：db4a651090a9bd78db3535106b5416b2
+## Padavan固件说明
 
-## 极硬货(HC5663)
+Padavan固件使用和原厂固件相同的MTK闭源无线驱动，无线性能好，同时界面比原厂固件流畅，功能也更多，推荐使用。
+本仓库发布的Padavan固件均实机测试通过，LAN口、WAN口、LED指示灯、SD卡、USB接口均测试正常。
 
-[HC5663-sysupgrade-20161222-0fcefe13.bin](BIN/HC5663-sysupgrade-20161222-0fcefe13.bin)
+- 管理IP：192.168.2.1
+- 默认用户名：admin，密码：admin
+- 默认无线密码：1234567890
 
-- 稳定版rom(发布时间:2016-12-22)
-- 版本号：1.2.5.16426s(大小:12MB)
-- MD5：515e4514c42bf537e801f286ac6a7f95
+HC5861注意事项：
 
-## 极路由壹S(HC5661A)
+- **HC5861带一个红色千兆口，Padavan固件将千兆口设置为WAN接口**
+- HC5861中间的TURBO LED改为了USB显示，USB挂载成功点亮
 
-[HC5661A-sysupgrade-20180310-769cc3bf.bin](BIN/HC5661A-sysupgrade-20180310-769cc3bf.bin)
+从其它固件刷Padavan需要在Breed中进行，FLASH布局使用**公版**(0x50000)，刷好Padavan以后升级固件可在Padavan的web页面中进行。
+也可以使用ssh中使用mtd_write命令更新固件：
 
-- 稳定版rom(发布时间:2018-03-10)
-- 版本号：1.4.10.20837s(大小:12MB)
-- MD5：8dafbdd82c399a7cacd7646869fbcf43
+`mtd_write -r write HCxxxx_3.4.39-099_xxxxxxx_v220405.trx Firmware_Stub`
 
-## 极路由贰(HC5761)
+`-r`选项表示更新完重启，`.trx`为要升级的固件。如果更新完Padavan以后有莫名其妙的问题，可以尝试在Padavan重置一下参数。
 
-[HC5761-sysupgrade-20180510-0dd7abd0.bin](BIN/HC5761-sysupgrade-20180510-0dd7abd0.bin)
+## 注意事项
 
-- 稳定版rom(发布时间:2018-05-10)
-- 版本号：1.4.11.21001s(大小:12MB)
-- MD5：3f81be0ff9f141b335ffa2bc19cb8c05
+极路由型号众多，不同的型号固件通常不能互刷，选择固件时注意CPU型号。
+比如：极路由1S分为HC5661和HC5661A；极路由贰分为HC5761和HC5761A。CPU分别是MT7620和MT7628，固件不能通刷。
 
-## 极路由贰(HC5761A)
+MT7628为MT7620的降成本版本，去掉了两个RGMII接口，去掉了HNAT，减小了芯片封装尺寸，GPIO从72个减少到47个。
 
-[HC5761A-sysupgrade-20170606-abe3b35e.bin](BIN/HC5761A-sysupgrade-20170606-abe3b35e.bin)
+Bootloader推荐使用Breed，在原厂固件中刷入即可，方法请自行搜索。
 
-- 稳定版rom(发布时间:2017-06-06)
-- 版本号：1.3.5.18462s(大小:12MB)
-- MD5：ffd20c9d6638ca2e734da91bb21c3506
+从原厂固件刷其它固件之前，一定记得备份一个编程器固件，至少要备份eeprom，以备不时之需。
+推荐在Breed中备份一份编程器固件，包括了eeprom在内的所有信息。最差的情况下使用编程器写入SPI FLASH即可。
 
-## 极路由叁(HC5861)
+极路由原厂固件的MAC地址存放在FLASH尾部的bdinfo分区中，其它第三方固件MAC地址都存放在eeprom分区中，
+第三方固件如Padavan会将FLASH尾部的三个分区擦除，这也是备份原厂固件的重要原因。
+第一次由原厂固件刷第三方固件时需要重新将MAC地址写入eeprom分区。以Padavan为例，推荐使用ssh命令写入：
 
-[HC5861-sysupgrade-20180310-c38d25c4.bin](BIN/HC5861-sysupgrade-20180310-c38d25c4.bin)
+- lan_eeprom_mac：写入LAN的MAC地址
+- radio2_eeprom_mac：写入2.4G无线的MAC地址
+- radio5_eeprom_mac：写入5G无线的MAC地址
+- wan_eeprom_mac：写入LAN的MAC地址
 
-- 稳定版rom(发布时间:2018-03-10)
-- 版本号：1.4.10.20837s(大小:12MB)
-- MD5：46c8d400a50c250c080969ec8a217765
+极路由LAN、2.4G、5G的MAC地址是相同的，就是机器背面标签的MAC地址，WAN的地址最后一个字节相对LAN地址+1.
+也可以使用Breed写入MAC地址，具体方法请自行搜索。将MAC地址写入eeprom分区以后再刷回原厂固件没有影响。
+此外FLASH尾部的bdinfo分区除了MAC地址，还有原厂的一个设备密钥，用于原厂的插件，由于众所周知的原因没什么用了。
 
-## 极路由3S(C312A)
+## 相关链接
 
-[R32-sysupgrade-20180310-dda43ad0.bin](BIN/R32-sysupgrade-20180310-dda43ad0.bin)
-
-- 稳定版rom(发布时间:2018-03-10)
-- 版本号：1.4.10.20837s(大小:11MB)
-- MD5：087a2b3acdf13b9e7f6afd059a88c341
-
-## 极路由3Pro(C312B)
-
-[R33-sysupgrade-20180510-910b5192.bin](BIN/R33-sysupgrade-20180510-910b5192.bin)
-
-- 稳定版rom(发布时间:2018-05-10)
-- 版本号：1.4.11.21001s(大小:13MB)
-- MD5：3cd03e16080358489b41e5e257648ed9
-
-## 极路由4(HC5962)
-
-[HC5962-sysupgrade-20171221-b00a04d1.bin](BIN/HC5962-sysupgrade-20171221-b00a04d1.bin)
-
-- 稳定版rom(发布时间:2017-12-21)
-- 版本号：1.4.8.20462s(大小:14MB)
-- MD5：8e4b0942e047e1344db2cba8f26118b0
-
-## 极路由Go(HC5611)
-
-[HC5611-sysupgrade-20170606-44f46c15.bin](BIN/HC5611-sysupgrade-20170606-44f46c15.bin)
-
-- 稳定版rom(发布时间:2017-06-06)
-- 版本号：1.3.5.18462s(大小:9MB)
-- MD5：5b7dc898c8a68886470154771a2aa8ed
-
-## 极路由X(C526A)
-
-[R34-sysupgrade-20180615-fafd840f.bin](BIN/R34-sysupgrade-20180615-fafd840f.bin)
-
-- 稳定版rom(发布时间:2018-06-15)
-- 版本号：1.5.9.21254s(大小:17MB)
-- MD5：ee4ac11bfbd4c79d6ba5ed546b088396
+- [Breed](https://breed.hackpascal.net)
+- [OpenWrt](https://openwrt.org/)
+- [恩山无线论坛](https://www.right.com.cn/forum)
+- [不拆机获取ROOT权限](http://www.hiwifi.wtf)
