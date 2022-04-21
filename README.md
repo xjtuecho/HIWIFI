@@ -54,9 +54,24 @@ Bootloader推荐使用Breed，在原厂固件中刷入即可，方法请自行�
 也可以使用Breed写入MAC地址，具体方法请自行搜索。将MAC地址写入eeprom分区以后再刷回原厂固件没有影响。
 此外FLASH尾部的bdinfo分区除了MAC地址，还有原厂的一个设备密钥，用于原厂的插件，由于众所周知的原因没什么用了。
 
+## 不拆机开启SSH
+
+进行该操作时，建议将极路由的WAN口接在主路由的LAN口上作为二级路由使用，PC连接极路由的有线或者无线。
+
+按照[网站www.hiwifi.wtf](http://www.hiwifi.wtf)描述操作，打开临时SSH，一般在22端口。
+
+打开以后重新上电会关闭SSH，永久开启需要SSH登录路由器后台，使用以下命令使能dropbear服务：
+
+```
+/etc/init.d/dropbear enable
+```
+
+修改SSH端口编辑`/etc/config/dropbear`文件，推荐修改到极路由默认的1022端口。
+
+
 ## 相关链接
 
 - [Breed](https://breed.hackpascal.net)
 - [OpenWrt](https://openwrt.org/)
 - [恩山无线论坛](https://www.right.com.cn/forum)
-- [不拆机获取ROOT权限](http://www.hiwifi.wtf)
+- [不拆机开启SSH](http://www.hiwifi.wtf)
