@@ -2,6 +2,10 @@
 
 Padavan firmware of Hiwifi Routers.
 
+## v221201
+
+- NTFS驱动改为ANTFS
+
 ## v220421
 
 - 适配HC5761A，芯片为MT7628AN

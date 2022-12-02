@@ -25,7 +25,7 @@ HC5861注意事项：
 从其它固件刷Padavan需要在Breed中进行，FLASH布局使用**公版**(0x50000)，刷好Padavan以后升级固件可在Padavan的web页面中进行。
 也可以使用ssh中使用mtd_write命令更新固件：
 
-`mtd_write -r write HCxxxx_3.4.39-099_xxxxxxx_v220405.trx Firmware_Stub`
+`mtd_write -r write HCxxxx_3.4.39-099_xxxxxxx_vxxxxxx.trx Firmware_Stub`
 
 `-r`选项表示更新完重启，`.trx`为要升级的固件。如果更新完Padavan以后有莫名其妙的问题，可以尝试在Padavan重置一下参数。
 
@@ -68,6 +68,11 @@ Bootloader推荐使用Breed，在原厂固件中刷入即可，方法请自行�
 
 修改SSH端口编辑`/etc/config/dropbear`文件，推荐修改到极路由默认的1022端口。
 
+## USB接口
+
+- HC5661和HC5661A硬件上有USB-A接口，但是并没有焊接，外壳也没有开孔，因此当作无USB处理。
+- HC5761对外有USB-A接口，在侧面，但是由于使用MicroUSB接口5V电压供电，USB-A接口接大负载时输出5V电压偏低，容易造成HDD移动硬盘无法启动。U盘一般无此问题。
+- HC5761A和HC5861使用12V供电，USB-A接口对外5V供电带动HDD移动硬盘一般无问题。
 
 ## 相关链接
 
